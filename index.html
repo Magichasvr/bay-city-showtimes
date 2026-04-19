@@ -167,10 +167,10 @@
 <body>
   <div class="header">
     <div class="header-content">
-      <svg class="logo" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="200" height="50" fill="#080810"/>
-        <text x="100" y="20" fill="#e94560" font-family="Arial Black" font-size="14" font-weight="900" text-anchor="middle">BAY CITY</text>
-        <text x="100" y="38" fill="#e8ecf0" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">CINEMAS</text>
+      <svg class="logo" viewBox="0 0 300 60" xmlns="http://www.w3.org/2000/svg">
+        <rect width="300" height="60" fill="#080810"/>
+        <text x="150" y="25" font-family="Arial Black, sans-serif" font-size="18" font-weight="900" fill="#e94560" text-anchor="middle">BAY CITY</text>
+        <text x="150" y="48" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#e8ecf0" text-anchor="middle">CINEMAS</text>
       </svg>
       <div class="header-title">Cleaner's<br>Sheet</div>
     </div>
@@ -253,8 +253,12 @@
       let hours = parseInt(match[1]);
       const mins = parseInt(match[2]);
       const period = match[3].toLowerCase();
-      if (period === 'pm' && hours !== 12) hours += 12;
-      if (period === 'am' && hours === 12) hours = 0;
+      // PM: 1-11 add 12, but 12pm stays 12. AM: 1-11 stay, but 12am becomes 0
+      if (period === 'pm') {
+        if (hours < 12) hours += 12;
+      } else if (period === 'am') {
+        if (hours === 12) hours = 0;
+      }
       return hours * 60 + mins;
     }
     
@@ -263,10 +267,13 @@
       if (runtimeMins === 0) return '';
       const startMins = timeToMinutes(startTime);
       const totalMins = startMins + runtimeMins;
-      const hours = Math.floor(totalMins / 60);
+      const hours = Math.floor(totalMins / 60) % 24;
       const mins = totalMins % 60;
-      const periodStr = hours >= 12 && hours < 24 ? 'pm' : 'am';
-      let displayHours = hours % 24;
+      let periodStr = 'am';
+      if (hours >= 12) {
+        periodStr = 'pm';
+      }
+      let displayHours = hours;
       if (displayHours === 0) displayHours = 12;
       else if (displayHours > 12) displayHours -= 12;
       return displayHours + ':' + mins.toString().padStart(2, '0') + periodStr;
@@ -336,7 +343,7 @@
                 '<span class="theater-type">' + st.theater + '</span>' +
                 '<span class="auditorium">Aud ' + st.auditorium + '</span>' +
               '</div>' +
-              '<span class="showtime">' + endTime + '</span>' +
+              '<span class="showtime">' + st.time + ' - ' + endTime + '</span>' +
             '</div>' +
           '</div>';
         }).join('');
