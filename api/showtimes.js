@@ -11,11 +11,15 @@ module.exports = async function handler(req, res) {
   const shows = [];
   const parts = html.split('<div class="cin-movie-card');
   
+  let debugInfo = { partsLen: parts.length };
+  
   for (let i = 1; i < parts.length; i++) {
     const card = parts[i];
     const titleMatch = card.match(/<a[^>]+>([^<]+)<\/a>/);
     if (!titleMatch) continue;
     const title = titleMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, "&").trim();
+    
+    debugInfo.firstTitle = title;
     
     const ratingMatch = card.match(/<span[^>]*>(G|PG|PG-13|R|NR)<\/span>/);
     const rating = ratingMatch ? ratingMatch[1] : 'NR';
@@ -41,6 +45,8 @@ module.exports = async function handler(req, res) {
     });
   }
   
+  debugInfo.showsFound = shows.length;
+  
   res.setHeader('Cache-Control', 'no-cache');
-  res.status(200).json({ shows, lastUpdated: new Date().toISOString() });
+  res.status(200).json({ shows, lastUpdated: new Date().toISOString(), debug: debugInfo });
 }
