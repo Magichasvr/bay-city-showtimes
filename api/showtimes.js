@@ -8,8 +8,10 @@ export default async function handler(req, res) {
       }
     });
     const html = await response.text();
+    const htmlLen = html.length;
     
     if (!html.includes('cin-movie-card')) {
+      return res.status(500).json({ error: 'No movie cards', htmlLen });
       return res.status(500).json({ 
         error: 'No movie cards found', 
         htmlLen: html.length,
@@ -58,7 +60,7 @@ export default async function handler(req, res) {
     }
     
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-    res.status(200).json({ shows, lastUpdated: new Date().toISOString() });
+    res.status(200).json({ shows, lastUpdated: new Date().toISOString(), debug: { htmlLen, cardsFound: parts.length - 1 } });
   } catch (error) {
     console.log('Error:', error);
     res.status(500).json({ error: error.message, debug: 'catch error' });
