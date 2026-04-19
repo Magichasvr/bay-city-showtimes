@@ -12,51 +12,40 @@ export default async function handler(req, res) {
     const shows = [];
     const titleRatingMap = {};
     
-    const ratingSectionRegex = /<span[^>]*>(G|PG|PG-13|R|NR)<\/span>[\s\S]*?Details[\s\S]*?<a[^>]+>([^<]+)<\/a>/g;
-    let ratingMatch;
-    while ((ratingMatch = ratingSectionRegex.exec(html)) !== null) {
-      const rating = ratingMatch[1];
-      const title = ratingMatch[2].trim();
+    const parts = html.split('<div class="cin-movie-card');
+    
+    for (let i = 1; i < parts.length; i++) {
+      const card = parts[i];
+      
+      const titleMatch = card.match(/<a[^>]+>([^<]+)<\/a>/);
+      if (!titleMatch) continue;
+      const title = titleMatch[1].replace(/&#039;/g, "'").replace(/&amp;/g, "&").trim();
+      
+      const ratingMatch = card.match(/<span[^>]*>(G|PG|PG-13|R|NR)<\/span>/);
+      const rating = ratingMatch ? ratingMatch[1] : 'NR';
       titleRatingMap[title] = rating;
-    }
-    
-    const movieSectionRegex = /<a[^>]+href="\/movie\/(\d+)"[^>]*>[\s\S]*?<span[^>]*>([^<]+)<\/span>[\s\S]*?(\d+)h[\s\S]*?(\d+)m[\s\S]*?<span[^>]*>(\d{1,2}:\d{2}[ap]m)<\/span>/g;
-    let match;
-    let movieIdx = 0;
-    let generalCount = 0;
-    
-    while ((match = movieSectionRegex.exec(html)) !== null) {
-      movieIdx++;
-      const movieId = match[1];
-      const title = match[2].trim();
-      const hours = parseInt(match[3]) || 2;
-      const mins = parseInt(match[4]) || 0;
-      const runtime = `${hours}h ${mins}m`;
-      const time = match[5];
       
-      const fullTitle = title.replace(/&#039;/g, "'").replace(/&amp;/g, "&");
-      const isGDX = html.includes(fullTitle) && html.includes('GDX');
-      const isFlashback = html.includes(fullTitle) && html.includes('Flashback');
+      const runtimeMatch = card.match(/(\d+)h\s*(\d+)m/);
+      const runtime = runtimeMatch ? `${runtimeMatch[1]}h ${runtimeMatch[2]}m` : '2h 0m';
       
-      let auditorium;
-      if (isGDX) {
-        auditorium = (movieIdx % 2) === 1 ? '6' : '7';
-      } else if (isFlashback) {
-        auditorium = '1';
-      } else {
-        const auds = ['2', '3', '4', '5', '1'];
-        auditorium = auds[generalCount % auds.length];
-        generalCount++;
-      }
+      const timeMatches = card.match(/(\d{1,2}:\d{2}[ap]m)/g) || [];
+      const theaterMatch = card.match(/<span[^>]*>([^<]+)<\/span>/g);
       
-      shows.push({
-        movieId: `${fullTitle.toLowerCase().replace(/[^a-z0-9]/g, '')}${movieIdx}`,
-        movie: fullTitle,
-        rating: titleRatingMap[fullTitle] || 'NR',
-        time: time,
-        theater: isGDX ? 'GDX' : (isFlashback ? 'Flashback' : 'General'),
-        auditorium: auditorium,
-        runtime: runtime
+      const isGDX = card.includes('GDX');
+      const isFlashback = card.includes('Flashback Cinema');
+      
+      const auds = isGDX ? ['6', '7'] : (isFlashback ? ['1'] : ['1', '2', '3', '4', '5']);
+      
+      timeMatches.forEach((time, idx) => {
+        shows.push({
+          movieId: `${title.toLowerCase().replace(/[^a-z0-9]/g, '')}${idx + 1}`,
+          movie: title,
+          rating: rating,
+          time: time,
+          theater: isGDX ? 'GDX' : (isFlashback ? 'Flashback' : 'General'),
+          auditorium: auds[idx % auds.length],
+          runtime: runtime
+        });
       });
     }
     
