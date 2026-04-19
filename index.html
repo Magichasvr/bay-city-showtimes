@@ -257,7 +257,7 @@ const API_URL = 'https://workapp-theta.vercel.app/api/showtimes';
       // Using embedded data - works from APK without internet
     }
     
-    async function init() {
+async function init() {
       cleaned = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
       
       const today = new Date();
@@ -268,7 +268,7 @@ const API_URL = 'https://workapp-theta.vercel.app/api/showtimes';
       const nowplayingTab = document.querySelector('[data-tab="nowplaying"]');
       if (nowplayingTab) nowplayingTab.classList.add('active');
       
-      await loadShowtimes();
+      loadShowtimes();
       render();
     }
     
