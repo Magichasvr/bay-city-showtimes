@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bay City Cleaner - Live</title>
+  <title>Bay City Cleaner</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -48,151 +48,131 @@
       font-weight: 700;
       color: var(--text);
       text-transform: uppercase;
-      letter-spacing: 1px;
     }
     .nav {
-      background: rgba(18, 22, 32, 0.95);
-      backdrop-filter: blur(12px);
+      background: var(--bg-card);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 73px;
       z-index: 99;
-      border-bottom: 1px solid var(--border);
     }
-    .nav-list {
+    .nav ul {
       max-width: 600px;
       margin: 0 auto;
       display: flex;
       list-style: none;
+      gap: 8px;
     }
     .nav-item {
       flex: 1;
       text-align: center;
-      padding: 14px;
+      padding: 12px 16px;
+      border-radius: 8px;
       cursor: pointer;
+      font-weight: 500;
       color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 3px solid transparent;
       transition: all 0.2s;
     }
-    .nav-item:hover { color: var(--text); background: rgba(233, 69, 96, 0.08); }
     .nav-item.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-      background: rgba(233, 69, 96, 0.05);
-    }
-    .nav-count {
-      display: inline-block;
       background: var(--primary);
       color: white;
-      font-size: 0.7rem;
-      padding: 2px 6px;
+    }
+    .nav-item:not(.active):hover {
+      background: var(--bg-card-hover);
+    }
+    .nav-count {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
       border-radius: 10px;
+      font-size: 0.85rem;
       margin-left: 6px;
     }
-    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
     .date-display {
       text-align: center;
-      padding: 16px 24px;
-      background: linear-gradient(135deg, #1a2535 0%, #151d28 100%);
-      border-radius: 12px;
+      color: var(--text-muted);
       margin-bottom: 16px;
-      font-family: 'Roboto Condensed', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--primary);
-      border: 1px solid rgba(233, 69, 96, 0.3);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      font-size: 1.1rem;
+    }
+    .movie-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
     .movie-card {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 18px;
-      background: linear-gradient(135deg, #151c28 0%, #0f141c 100%);
-      border: 1px solid var(--border);
+      background: var(--bg-card);
       border-radius: 12px;
-      margin-bottom: 10px;
-      transition: all 0.25s ease;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
     }
-    .movie-card:hover {
-      background: linear-gradient(135deg, #1c2538 0%, #141a24 100%);
-      border-color: rgba(233, 69, 96, 0.5);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(233, 69, 96, 0.15);
+    .movie-card.cleaned {
+      opacity: 0.5;
+      background: var(--bg-card-hover);
     }
-    .movie-card.cleaned { opacity: 0.5; }
     .checkbox {
       width: 24px;
       height: 24px;
       accent-color: var(--primary);
       cursor: pointer;
-      flex-shrink: 0;
     }
-    .movie-info { flex: 1; min-width: 0; }
+    .movie-info {
+      flex: 1;
+    }
     .movie-title {
       font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
     }
     .movie-meta {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
     }
     .rating {
-      background: rgba(61, 214, 245, 0.15);
+      background: var(--primary);
+      color: white;
       padding: 2px 6px;
       border-radius: 4px;
-      font-weight: 600;
-      font-size: 0.7rem;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .theater-type {
       color: var(--accent);
     }
-    .theater-type { color: var(--accent); font-weight: 700; font-size: 0.75rem; }
-    .auditorium {
-      background: linear-gradient(135deg, #e94560 0%, #b8324a 100%);
-      color: white;
-      font-weight: 700;
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
     .showtime {
-      display: inline-flex;
-      align-items: center;
+      display: inline-block;
+      background: var(--bg-dark);
       padding: 6px 12px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--text);
-      background: rgba(61, 214, 245, 0.12);
-      border: 1px solid rgba(61, 214, 245, 0.25);
+      font-size: 1rem;
     }
-    .showtime.expired { text-decoration: line-through; opacity: 0.35; background: transparent; border-color: transparent; }
-    .showtime.available {
-      background: linear-gradient(135deg, #e94560 0%, #c73650 100%);
-      border-color: transparent;
-      box-shadow: 0 2px 10px rgba(233, 69, 96, 0.4);
+    .showtime.expired {
+      text-decoration: line-through;
+      color: var(--text-dim);
     }
   </style>
 </head>
 <body>
   <div class="header">
     <div class="header-content">
-      <img src="https://images.cinemaplus.com/hosted/bay-city-cinemas-llc/logo-primary-v1.png" class="logo" alt="Bay City Cinemas">
-      <div class="header-title">Cleaner's Sheet</div>
+      <div class="header-title">Bay City<br>Cleaner</div>
     </div>
   </div>
   
   <div class="nav">
-    <ul class="nav-list">
+    <ul>
       <li class="nav-item active" data-tab="nowplaying" onclick="switchTab('nowplaying')">
         Now Playing <span class="nav-count" id="nowPlayingCount">0</span>
       </li>
@@ -209,70 +189,50 @@
 
   <script>
     const STORAGE_KEY = 'baycity_movies_cleaned';
-    
-let todaysShowtimes = [
-      {"movieId":"ballistic-2-1","movie":"Ballistic","rating":"NR","time":"10:20a","endTime":"11:56am","theater":"General","auditorium":"1","runtime":"1h 36m","endMins":716},
-      {"movieId":"leecroninsthemummygdx-4-1","movie":"Lee Cronin's The Mummy GDX","rating":"R","time":"10:00a","endTime":"12:14pm","theater":"GDX","auditorium":"6","runtime":"2h 14m","endMins":734},
-      {"movieId":"thesupermariogalaxymoviegdx-8-1","movie":"The Super Mario Galaxy Movie GDX","rating":"PG","time":"10:30a","endTime":"12:08pm","theater":"GDX","auditorium":"6","runtime":"1h 38m","endMins":728},
-      {"movieId":"thesupermariogalaxymovie-9-1","movie":"The Super Mario Galaxy Movie","rating":"PG","time":"11:40a","endTime":"1:18pm","theater":"General","auditorium":"1","runtime":"1h 38m","endMins":738},
-      {"movieId":"thepoutpoutfish-11-1","movie":"The Pout-Pout Fish","rating":"PG","time":"11:00a","endTime":"12:31pm","theater":"General","auditorium":"1","runtime":"1h 31m","endMins":751},
-      {"movieId":"youmetuscany-6-1","movie":"You, Me & Tuscany","rating":"PG-13","time":"11:20a","endTime":"1:04pm","theater":"General","auditorium":"1","runtime":"1h 44m","endMins":764},
-      {"movieId":"hoppers-14-1","movie":"Hoppers","rating":"PG","time":"11:10a","endTime":"12:55pm","theater":"General","auditorium":"1","runtime":"1h 45m","endMins":775},
-      {"movieId":"agreatawakening-7-1","movie":"A Great Awakening","rating":"PG-13","time":"11:30a","endTime":"1:39pm","theater":"General","auditorium":"1","runtime":"2h 9m","endMins":789},
-      {"movieId":"normal-3-1","movie":"Normal","rating":"R","time":"12:50p","endTime":"2:20pm","theater":"General","auditorium":"1","runtime":"1h 30m","endMins":830},
-      {"movieId":"leecroninsthemummygdx-4-2","movie":"Lee Cronin's The Mummy GDX","rating":"R","time":"1:00p","endTime":"3:14pm","theater":"GDX","auditorium":"7","runtime":"2h 14m","endMins":914},
-      {"movieId":"projecthailmary-12-1","movie":"Project Hail Mary","rating":"PG-13","time":"12:00p","endTime":"2:36pm","theater":"General","auditorium":"1","runtime":"2h 36m","endMins":916},
-      {"movieId":"ferrisbuellersdayoff40thanniversary-15-1","movie":"Ferris Bueller's Day Off 40th Anniversary","rating":"PG-13","time":"1:40p","endTime":"3:23pm","theater":"Flashback","auditorium":"1","runtime":"1h 43m","endMins":923},
-      {"movieId":"youmetuscany-6-2","movie":"You, Me & Tuscany","rating":"PG-13","time":"2:10p","endTime":"3:54pm","theater":"General","auditorium":"2","runtime":"1h 44m","endMins":934},
-      {"movieId":"thesupermariogalaxymoviegdx-8-2","movie":"The Super Mario Galaxy Movie GDX","rating":"PG","time":"1:10p","endTime":"2:48pm","theater":"GDX","auditorium":"7","runtime":"1h 38m","endMins":908},
-      {"movieId":"facesofdeath-5-1","movie":"Faces of Death","rating":"R","time":"2:40p","endTime":"4:17pm","theater":"General","auditorium":"1","runtime":"1h 37m","endMins":997},
-      {"movieId":"thedrama-10-1","movie":"The Drama","rating":"R","time":"2:30p","endTime":"4:15pm","theater":"General","auditorium":"1","runtime":"1h 45m","endMins":1005},
-      {"movieId":"remindersofhim-13-1","movie":"Reminders of Him","rating":"PG-13","time":"3:00p","endTime":"4:54pm","theater":"General","auditorium":"1","runtime":"1h 54m","endMins":1014},
-      {"movieId":"thesupermariogalaxymovie-9-2","movie":"The Super Mario Galaxy Movie","rating":"PG","time":"2:45p","endTime":"4:23pm","theater":"General","auditorium":"2","runtime":"1h 38m","endMins":983},
-      {"movieId":"hoppers-14-2","movie":"Hoppers","rating":"PG","time":"2:00p","endTime":"3:45pm","theater":"General","auditorium":"2","runtime":"1h 45m","endMins":945},
-      {"movieId":"leecroninsthemummygdx-4-3","movie":"Lee Cronin's The Mummy GDX","rating":"R","time":"4:00p","endTime":"6:14pm","theater":"GDX","auditorium":"6","runtime":"2h 14m","endMins":1094},
-      {"movieId":"thesupermariogalaxymoviegdx-8-3","movie":"The Super Mario Galaxy Movie GDX","rating":"PG","time":"3:50p","endTime":"5:28pm","theater":"GDX","auditorium":"6","runtime":"1h 38m","endMins":1088},
-      {"movieId":"normal-3-2","movie":"Normal","rating":"R","time":"5:40p","endTime":"7:10pm","theater":"General","auditorium":"2","runtime":"1h 30m","endMins":1150},
-      {"movieId":"youmetuscany-6-3","movie":"You, Me & Tuscany","rating":"PG-13","time":"4:50p","endTime":"6:34pm","theater":"General","auditorium":"3","runtime":"1h 44m","endMins":1114},
-      {"movieId":"hoppers-14-3","movie":"Hoppers","rating":"PG","time":"4:40p","endTime":"6:25pm","theater":"General","auditorium":"3","runtime":"1h 45m","endMins":1165},
-      {"movieId":"thesupermariogalaxymovie-9-3","movie":"The Super Mario Galaxy Movie","rating":"PG","time":"5:00p","endTime":"6:38pm","theater":"General","auditorium":"3","runtime":"1h 38m","endMins":1178},
-      {"movieId":"leecroninsthemummygdx-4-4","movie":"Lee Cronin's The Mummy GDX","rating":"R","time":"7:10p","endTime":"9:24pm","theater":"GDX","auditorium":"7","runtime":"2h 14m","endMins":1284},
-      {"movieId":"thesupermariogalaxymoviegdx-8-4","movie":"The Super Mario Galaxy Movie GDX","rating":"PG","time":"6:30p","endTime":"8:08pm","theater":"GDX","auditorium":"7","runtime":"1h 38m","endMins":1288},
-      {"movieId":"youmetuscany-6-4","movie":"You, Me & Tuscany","rating":"PG-13","time":"7:30p","endTime":"9:14pm","theater":"General","auditorium":"4","runtime":"1h 44m","endMins":1294},
-      {"movieId":"wwewrestlemania42-1-1","movie":"WWE WrestleMania 42","rating":"NR","time":"6:00p","endTime":"10:00pm","theater":"General","auditorium":"1","runtime":"4h 0m","endMins":1320},
-      {"movieId":"facesofdeath-5-2","movie":"Faces of Death","rating":"R","time":"8:10p","endTime":"9:47pm","theater":"General","auditorium":"2","runtime":"1h 37m","endMins":1387},
-      {"movieId":"thedrama-10-2","movie":"The Drama","rating":"R","time":"5:10p","endTime":"6:55pm","theater":"General","auditorium":"2","runtime":"1h 45m","endMins":1135},
-      {"movieId":"projecthailmary-12-2","movie":"Project Hail Mary","rating":"PG-13","time":"3:30p","endTime":"6:06pm","theater":"General","auditorium":"2","runtime":"2h 36m","endMins":1086},
-      {"movieId":"agreatawakening-7-2","movie":"A Great Awakening","rating":"PG-13","time":"5:10p","endTime":"7:19pm","theater":"General","auditorium":"2","runtime":"2h 9m","endMins":1109},
-      {"movieId":"thesupermariogalaxymovie-9-4","movie":"The Super Mario Galaxy Movie","rating":"PG","time":"7:40p","endTime":"9:18pm","theater":"General","auditorium":"4","runtime":"1h 38m","endMins":1318},
-      {"movieId":"thedrama-10-3","movie":"The Drama","rating":"R","time":"7:50p","endTime":"9:35pm","theater":"General","auditorium":"3","runtime":"1h 45m","endMins":1375},
-      {"movieId":"remindersofhim-13-2","movie":"Reminders of Him","rating":"PG-13","time":"7:20p","endTime":"9:14pm","theater":"General","auditorium":"2","runtime":"1h 54m","endMins":1334},
-      {"movieId":"projecthailmary-12-3","movie":"Project Hail Mary","rating":"PG-13","time":"7:00p","endTime":"9:36pm","theater":"General","auditorium":"3","runtime":"2h 36m","endMins":1336},
-      {"movieId":"ferrisbuellersdayoff40thanniversary-15-2","movie":"Ferris Bueller's Day Off 40th Anniversary","rating":"PG-13","time":"8:00p","endTime":"9:43pm","theater":"Flashback","auditorium":"1","runtime":"1h 43m","endMins":1363}
-    ];
     let cleaned = {};
     let currentTab = 'nowplaying';
     
-    function loadShowtimes() {
-      // Using embedded data - works from APK without internet
-    }
-    
-async function init() {
-      cleaned = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      
-      const today = new Date();
-      document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
-      
-      currentTab = 'nowplaying';
-      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
-      const nowplayingTab = document.querySelector('[data-tab="nowplaying"]');
-      if (nowplayingTab) nowplayingTab.classList.add('active');
-      
-      loadShowtimes();
-      render();
-    }
-    
-    window.onload = init;
+    // Showtimes with START times only - app will calculate end times
+    let todaysShowtimes = [
+      {movieId:"b1",movie:"Ballistic",rating:"NR",time:"10:20a",runtime:"1h 36m",theater:"General",auditorium:"1"},
+      {movieId:"m1",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"10:00a",runtime:"2h 14m",theater:"GDX",auditorium:"6"},
+      {movieId:"m2",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"10:30a",runtime:"1h 38m",theater:"GDX",auditorium:"6"},
+      {movieId:"m3",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"11:40a",runtime:"1h 38m",theater:"General",auditorium:"1"},
+      {movieId:"p1",movie:"The Pout-Pout Fish",rating:"PG",time:"11:00a",runtime:"1h 31m",theater:"General",auditorium:"1"},
+      {movieId:"y1",movie:"You, Me & Tuscany",rating:"PG-13",time:"11:20a",runtime:"1h 44m",theater:"General",auditorium:"1"},
+      {movieId:"h1",movie:"Hoppers",rating:"PG",time:"11:10a",runtime:"1h 45m",theater:"General",auditorium:"1"},
+      {movieId:"a1",movie:"A Great Awakening",rating:"PG-13",time:"11:30a",runtime:"2h 9m",theater:"General",auditorium:"1"},
+      {movieId:"n1",movie:"Normal",rating:"R",time:"12:50p",runtime:"1h 30m",theater:"General",auditorium:"1"},
+      {movieId:"p2",movie:"Project Hail Mary",rating:"PG-13",time:"12:00p",runtime:"2h 36m",theater:"General",auditorium:"1"},
+      {movieId:"m4",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"1:00p",runtime:"2h 14m",theater:"GDX",auditorium:"7"},
+      {movieId:"f1",movie:"Ferris Bueller's Day Off 40th Anniversary",rating:"PG-13",time:"1:40p",runtime:"1h 43m",theater:"Flashback",auditorium:"1"},
+      {movieId:"y2",movie:"You, Me & Tuscany",rating:"PG-13",time:"2:10p",runtime:"1h 44m",theater:"General",auditorium:"2"},
+      {movieId:"m5",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"1:10p",runtime:"1h 38m",theater:"GDX",auditorium:"7"},
+      {movieId:"f2",movie:"Faces of Death",rating:"R",time:"2:40p",runtime:"1h 37m",theater:"General",auditorium:"1"},
+      {movieId:"d1",movie:"The Drama",rating:"R",time:"2:30p",runtime:"1h 45m",theater:"General",auditorium:"1"},
+      {movieId:"r1",movie:"Reminders of Him",rating:"PG-13",time:"3:00p",runtime:"1h 54m",theater:"General",auditorium:"1"},
+      {movieId:"m6",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"2:45p",runtime:"1h 38m",theater:"General",auditorium:"2"},
+      {movieId:"h2",movie:"Hoppers",rating:"PG",time:"2:00p",runtime:"1h 45m",theater:"General",auditorium:"2"},
+      {movieId:"m7",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"4:00p",runtime:"2h 14m",theater:"GDX",auditorium:"6"},
+      {movieId:"m8",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"3:50p",runtime:"1h 38m",theater:"GDX",auditorium:"6"},
+      {movieId:"n2",movie:"Normal",rating:"R",time:"5:40p",runtime:"1h 30m",theater:"General",auditorium:"2"},
+      {movieId:"y3",movie:"You, Me & Tuscany",rating:"PG-13",time:"4:50p",runtime:"1h 44m",theater:"General",auditorium:"3"},
+      {movieId:"h3",movie:"Hoppers",rating:"PG",time:"4:40p",runtime:"1h 45m",theater:"General",auditorium:"3"},
+      {movieId:"m9",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"5:00p",runtime:"1h 38m",theater:"General",auditorium:"3"},
+      {movieId:"m10",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"7:10p",runtime:"2h 14m",theater:"GDX",auditorium:"7"},
+      {movieId:"m11",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"6:30p",runtime:"1h 38m",theater:"GDX",auditorium:"7"},
+      {movieId:"y4",movie:"You, Me & Tuscany",rating:"PG-13",time:"7:30p",runtime:"1h 44m",theater:"General",auditorium:"4"},
+      {movieId:"w1",movie:"WWE WrestleMania 42",rating:"NR",time:"6:00p",runtime:"4h 0m",theater:"General",auditorium:"1"},
+      {movieId:"f3",movie:"Faces of Death",rating:"R",time:"8:10p",runtime:"1h 37m",theater:"General",auditorium:"2"},
+      {movieId:"d2",movie:"The Drama",rating:"R",time:"5:10p",runtime:"1h 45m",theater:"General",auditorium:"2"},
+      {movieId:"p3",movie:"Project Hail Mary",rating:"PG-13",time:"3:30p",runtime:"2h 36m",theater:"General",auditorium:"2"},
+      {movieId:"a2",movie:"A Great Awakening",rating:"PG-13",time:"5:10p",runtime:"2h 9m",theater:"General",auditorium:"2"},
+      {movieId:"m12",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"7:40p",runtime:"1h 38m",theater:"General",auditorium:"4"},
+      {movieId:"d3",movie:"The Drama",rating:"R",time:"7:50p",runtime:"1h 45m",theater:"General",auditorium:"3"},
+      {movieId:"r2",movie:"Reminders of Him",rating:"PG-13",time:"7:20p",runtime:"1h 54m",theater:"General",auditorium:"2"},
+      {movieId:"p4",movie:"Project Hail Mary",rating:"PG-13",time:"7:00p",runtime:"2h 36m",theater:"General",auditorium:"3"},
+      {movieId:"f4",movie:"Ferris Bueller's Day Off 40th Anniversary",rating:"PG-13",time:"8:00p",runtime:"1h 43m",theater:"Flashback",auditorium:"1"}
+    ];
     
     function getRuntimeMinutes(runtime) {
       if (!runtime) return 0;
@@ -293,21 +253,18 @@ async function init() {
       return hours * 60 + mins;
     }
     
-    function minutesToTime(totalMins) {
-      const hours = totalMins % 1440;
-      const endHours = Math.floor(hours / 60);
-      const endMins = hours % 60;
-      const periodStr = endHours >= 12 ? 'pm' : 'am';
-      const displayHours = endHours === 0 ? 12 : (endHours > 12 ? endHours - 12 : endHours);
-      return displayHours + ':' + endMins.toString().padStart(2, '0') + periodStr;
-    }
-    
     function getEndTime(startTime, runtime) {
       const runtimeMins = getRuntimeMinutes(runtime);
       if (runtimeMins === 0) return '';
       const startMins = timeToMinutes(startTime);
       const totalMins = startMins + runtimeMins;
-      return minutesToTime(totalMins);
+      const hours = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      const periodStr = hours >= 12 && hours < 24 ? 'pm' : 'am';
+      let displayHours = hours % 24;
+      if (displayHours === 0) displayHours = 12;
+      else if (displayHours > 12) displayHours -= 12;
+      return displayHours + ':' + mins.toString().padStart(2, '0') + periodStr;
     }
     
     function getEndMinutes(startTime, runtime) {
@@ -317,11 +274,26 @@ async function init() {
       return startMins + runtimeMins;
     }
     
-    function isMovieEnded(time, runtime) {
-      const endMins = getEndMinutes(time, runtime);
-      if (endMins === 0) return false;
-      const now = new Date();
-      return (now.getHours() * 60 + now.getMinutes()) > endMins;
+    function init() {
+      cleaned = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      
+      const today = new Date();
+      document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      
+      currentTab = 'nowplaying';
+      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="nowplaying"]').classList.add('active');
+      
+      render();
+    }
+    
+    window.onload = init;
+    
+    function toggleCleaned(movieId, time) {
+      const key = movieId + '|' + time;
+      cleaned[key] = !cleaned[key];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+      render();
     }
     
     function switchTab(tab) {
@@ -331,20 +303,11 @@ async function init() {
       render();
     }
     
-    function toggleCleaned(movieId, time) {
-      const key = movieId + '|' + time;
-      cleaned[key] = !cleaned[key];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
-      render();
-    }
-    
     function render() {
       const list = document.getElementById('movieList');
       
       const sorted = [...todaysShowtimes].sort((a, b) => {
-        const endA = a.endMins || getEndMinutes(a.time, a.runtime);
-        const endB = b.endMins || getEndMinutes(b.time, b.runtime);
-        return endA - endB;
+        return getEndMinutes(a.time, a.runtime) - getEndMinutes(b.time, b.runtime);
       });
       
       const filtered = currentTab === 'nowplaying' 
@@ -357,10 +320,7 @@ async function init() {
         list.innerHTML = filtered.map(st => {
           const key = st.movieId + '|' + st.time;
           const isCleaned = cleaned[key] === true;
-          const endTime = st.endTime || getEndTime(st.time, st.runtime);
-          const endMins = st.endMins || getEndMinutes(st.time, st.runtime);
-          const movieEnded = isMovieEnded(st.time, st.runtime);
-          const showtimeClass = movieEnded ? 'showtime expired' : 'showtime available';
+          const endTime = getEndTime(st.time, st.runtime);
           
           return '<div class="movie-card ' + (isCleaned ? 'cleaned' : '') + '">' +
             '<input type="checkbox" class="checkbox" ' + (isCleaned ? 'checked' : '') + ' onchange="toggleCleaned(\'' + st.movieId + '\',\'' + st.time + '\')">' +
@@ -371,7 +331,7 @@ async function init() {
                 '<span class="theater-type">' + st.theater + '</span>' +
                 '<span class="auditorium">Aud ' + st.auditorium + '</span>' +
               '</div>' +
-              '<span class="' + showtimeClass + '">' + endTime + '</span>' +
+              '<span class="showtime">' + endTime + '</span>' +
             '</div>' +
           '</div>';
         }).join('');
