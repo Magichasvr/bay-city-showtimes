@@ -1,0 +1,9 @@
+{
+  "name": "bay-city-showtimes",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "vercel build",
+    "start": "vercel start"
+  }
+}
