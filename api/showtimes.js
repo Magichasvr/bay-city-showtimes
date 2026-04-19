@@ -1,4 +1,5 @@
 module.exports = async function handler(req, res) {
+  console.log('API called at', new Date().toISOString());
   const BAY_CITY_URL = 'https://www.baycitycinemas.com/showtimes';
   
   const response = await fetch(BAY_CITY_URL, {
