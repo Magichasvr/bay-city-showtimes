@@ -49,9 +49,10 @@ export default async function handler(req, res) {
       });
     }
     
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.status(200).json({ shows, lastUpdated: new Date().toISOString() });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.log('Error:', error);
+    res.status(500).json({ error: error.message, debug: 'catch error' });
   }
 }
