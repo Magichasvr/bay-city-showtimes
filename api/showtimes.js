@@ -9,6 +9,14 @@ export default async function handler(req, res) {
     });
     const html = await response.text();
     
+    if (!html.includes('cin-movie-card')) {
+      return res.status(500).json({ 
+        error: 'No movie cards found', 
+        htmlLen: html.length,
+        htmlSample: html.substring(0, 500)
+      });
+    }
+    
     const shows = [];
     const titleRatingMap = {};
     
