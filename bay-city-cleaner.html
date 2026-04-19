@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bay City Cleaner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #e94560;
+      --primary-hover: #c73650;
+      --accent: #3dd6f5;
+      --bg-dark: #080810;
+      --bg-card: #121620;
+      --bg-card-hover: #1a2030;
+      --text: #e8ecf0;
+      --text-muted: #8899aa;
+      --text-dim: #556677;
+      --border: #2a3444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: radial-gradient(ellipse at top, #121620 0%, #080810 100%);
+      min-height: 100vh;
+      color: var(--text);
+      padding-bottom: 80px;
+    }
+    .header {
+      background: linear-gradient(180deg, #1a2535 0%, #0d1520 100%);
+      padding: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-content {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo { height: 40px; }
+    .header-title {
+      font-family: 'Roboto Condensed', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+    .nav {
+      background: var(--bg-card);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 73px;
+      z-index: 99;
+    }
+    .nav ul {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      list-style: none;
+      gap: 8px;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .nav-item.active {
+      background: var(--primary);
+      color: white;
+    }
+    .nav-item:not(.active):hover {
+      background: var(--bg-card-hover);
+    }
+    .nav-count {
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-left: 6px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .date-display {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 1.1rem;
+    }
+    .movie-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .movie-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+    .movie-card.cleaned {
+      opacity: 0.5;
+      background: var(--bg-card-hover);
+    }
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .movie-info {
+      flex: 1;
+    }
+    .movie-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .movie-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .rating {
+      background: var(--primary);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .theater-type {
+      color: var(--accent);
+    }
+    .showtime {
+      display: inline-block;
+      background: var(--bg-dark);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+    .showtime.expired {
+      text-decoration: line-through;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <svg class="logo" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="50" fill="#080810"/>
+        <text x="100" y="20" fill="#e94560" font-family="Arial Black" font-size="14" font-weight="900" text-anchor="middle">BAY CITY</text>
+        <text x="100" y="38" fill="#e8ecf0" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle">CINEMAS</text>
+      </svg>
+      <div class="header-title">Cleaner's<br>Sheet</div>
+    </div>
+  </div>
+  
+  <div class="nav">
+    <ul>
+      <li class="nav-item active" data-tab="nowplaying" onclick="switchTab('nowplaying')">
+        Now Playing <span class="nav-count" id="nowPlayingCount">0</span>
+      </li>
+      <li class="nav-item" data-tab="cleaned" onclick="switchTab('cleaned')">
+        Cleaned <span class="nav-count" id="cleanedCount">0</span>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="container">
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="movie-list" id="movieList"></div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'baycity_movies_cleaned';
+    let cleaned = {};
+    let currentTab = 'nowplaying';
+    
+    // Showtimes with START times only - app will calculate end times
+    let todaysShowtimes = [
+      {movieId:"b1",movie:"Ballistic",rating:"NR",time:"10:20a",runtime:"1h 36m",theater:"General",auditorium:"1"},
+      {movieId:"m1",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"10:00a",runtime:"2h 14m",theater:"GDX",auditorium:"6"},
+      {movieId:"m2",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"10:30a",runtime:"1h 38m",theater:"GDX",auditorium:"6"},
+      {movieId:"m3",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"11:40a",runtime:"1h 38m",theater:"General",auditorium:"1"},
+      {movieId:"p1",movie:"The Pout-Pout Fish",rating:"PG",time:"11:00a",runtime:"1h 31m",theater:"General",auditorium:"1"},
+      {movieId:"y1",movie:"You, Me & Tuscany",rating:"PG-13",time:"11:20a",runtime:"1h 44m",theater:"General",auditorium:"1"},
+      {movieId:"h1",movie:"Hoppers",rating:"PG",time:"11:10a",runtime:"1h 45m",theater:"General",auditorium:"1"},
+      {movieId:"a1",movie:"A Great Awakening",rating:"PG-13",time:"11:30a",runtime:"2h 9m",theater:"General",auditorium:"1"},
+      {movieId:"n1",movie:"Normal",rating:"R",time:"12:50p",runtime:"1h 30m",theater:"General",auditorium:"1"},
+      {movieId:"p2",movie:"Project Hail Mary",rating:"PG-13",time:"12:00p",runtime:"2h 36m",theater:"General",auditorium:"1"},
+      {movieId:"m4",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"1:00p",runtime:"2h 14m",theater:"GDX",auditorium:"7"},
+      {movieId:"f1",movie:"Ferris Bueller's Day Off 40th Anniversary",rating:"PG-13",time:"1:40p",runtime:"1h 43m",theater:"Flashback",auditorium:"1"},
+      {movieId:"y2",movie:"You, Me & Tuscany",rating:"PG-13",time:"2:10p",runtime:"1h 44m",theater:"General",auditorium:"2"},
+      {movieId:"m5",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"1:10p",runtime:"1h 38m",theater:"GDX",auditorium:"7"},
+      {movieId:"f2",movie:"Faces of Death",rating:"R",time:"2:40p",runtime:"1h 37m",theater:"General",auditorium:"1"},
+      {movieId:"d1",movie:"The Drama",rating:"R",time:"2:30p",runtime:"1h 45m",theater:"General",auditorium:"1"},
+      {movieId:"r1",movie:"Reminders of Him",rating:"PG-13",time:"3:00p",runtime:"1h 54m",theater:"General",auditorium:"1"},
+      {movieId:"m6",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"2:45p",runtime:"1h 38m",theater:"General",auditorium:"2"},
+      {movieId:"h2",movie:"Hoppers",rating:"PG",time:"2:00p",runtime:"1h 45m",theater:"General",auditorium:"2"},
+      {movieId:"m7",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"4:00p",runtime:"2h 14m",theater:"GDX",auditorium:"6"},
+      {movieId:"m8",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"3:50p",runtime:"1h 38m",theater:"GDX",auditorium:"6"},
+      {movieId:"n2",movie:"Normal",rating:"R",time:"5:40p",runtime:"1h 30m",theater:"General",auditorium:"2"},
+      {movieId:"y3",movie:"You, Me & Tuscany",rating:"PG-13",time:"4:50p",runtime:"1h 44m",theater:"General",auditorium:"3"},
+      {movieId:"h3",movie:"Hoppers",rating:"PG",time:"4:40p",runtime:"1h 45m",theater:"General",auditorium:"3"},
+      {movieId:"m9",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"5:00p",runtime:"1h 38m",theater:"General",auditorium:"3"},
+      {movieId:"m10",movie:"Lee Cronin's The Mummy GDX",rating:"R",time:"7:10p",runtime:"2h 14m",theater:"GDX",auditorium:"7"},
+      {movieId:"m11",movie:"The Super Mario Galaxy Movie GDX",rating:"PG",time:"6:30p",runtime:"1h 38m",theater:"GDX",auditorium:"7"},
+      {movieId:"y4",movie:"You, Me & Tuscany",rating:"PG-13",time:"7:30p",runtime:"1h 44m",theater:"General",auditorium:"4"},
+      {movieId:"w1",movie:"WWE WrestleMania 42",rating:"NR",time:"6:00p",runtime:"4h 0m",theater:"General",auditorium:"1"},
+      {movieId:"f3",movie:"Faces of Death",rating:"R",time:"8:10p",runtime:"1h 37m",theater:"General",auditorium:"2"},
+      {movieId:"d2",movie:"The Drama",rating:"R",time:"5:10p",runtime:"1h 45m",theater:"General",auditorium:"2"},
+      {movieId:"p3",movie:"Project Hail Mary",rating:"PG-13",time:"3:30p",runtime:"2h 36m",theater:"General",auditorium:"2"},
+      {movieId:"a2",movie:"A Great Awakening",rating:"PG-13",time:"5:10p",runtime:"2h 9m",theater:"General",auditorium:"2"},
+      {movieId:"m12",movie:"The Super Mario Galaxy Movie",rating:"PG",time:"7:40p",runtime:"1h 38m",theater:"General",auditorium:"4"},
+      {movieId:"d3",movie:"The Drama",rating:"R",time:"7:50p",runtime:"1h 45m",theater:"General",auditorium:"3"},
+      {movieId:"r2",movie:"Reminders of Him",rating:"PG-13",time:"7:20p",runtime:"1h 54m",theater:"General",auditorium:"2"},
+      {movieId:"p4",movie:"Project Hail Mary",rating:"PG-13",time:"7:00p",runtime:"2h 36m",theater:"General",auditorium:"3"},
+      {movieId:"f4",movie:"Ferris Bueller's Day Off 40th Anniversary",rating:"PG-13",time:"8:00p",runtime:"1h 43m",theater:"Flashback",auditorium:"1"}
+    ];
+    
+    function getRuntimeMinutes(runtime) {
+      if (!runtime) return 0;
+      const match = runtime.match(/(\d+)h\s*(\d+)m/);
+      if (match) return parseInt(match[1]) * 60 + parseInt(match[2]);
+      return 0;
+    }
+    
+    function timeToMinutes(timeStr) {
+      if (!timeStr) return 0;
+      const match = timeStr.match(/(\d+):(\d+)([ap]m)/);
+      if (!match) return 0;
+      let hours = parseInt(match[1]);
+      const mins = parseInt(match[2]);
+      const period = match[3].toLowerCase();
+      if (period === 'pm' && hours !== 12) hours += 12;
+      if (period === 'am' && hours === 12) hours = 0;
+      return hours * 60 + mins;
+    }
+    
+    function getEndTime(startTime, runtime) {
+      const runtimeMins = getRuntimeMinutes(runtime);
+      if (runtimeMins === 0) return '';
+      const startMins = timeToMinutes(startTime);
+      const totalMins = startMins + runtimeMins;
+      const hours = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      const periodStr = hours >= 12 && hours < 24 ? 'pm' : 'am';
+      let displayHours = hours % 24;
+      if (displayHours === 0) displayHours = 12;
+      else if (displayHours > 12) displayHours -= 12;
+      return displayHours + ':' + mins.toString().padStart(2, '0') + periodStr;
+    }
+    
+    function getEndMinutes(startTime, runtime) {
+      const runtimeMins = getRuntimeMinutes(runtime);
+      if (runtimeMins === 0) return 0;
+      const startMins = timeToMinutes(startTime);
+      return startMins + runtimeMins;
+    }
+    
+    function init() {
+      cleaned = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      
+      const today = new Date();
+      document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+      
+      currentTab = 'nowplaying';
+      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="nowplaying"]').classList.add('active');
+      
+      render();
+    }
+    
+    window.onload = init;
+    
+    function toggleCleaned(movieId, time) {
+      const key = movieId + '|' + time;
+      cleaned[key] = !cleaned[key];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+      render();
+    }
+    
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.nav-item').forEach(t => t.classList.remove('active'));
+      document.querySelector('[data-tab="' + tab + '"]').classList.add('active');
+      render();
+    }
+    
+    function render() {
+      const list = document.getElementById('movieList');
+      
+      const sorted = [...todaysShowtimes].sort((a, b) => {
+        return getEndMinutes(a.time, a.runtime) - getEndMinutes(b.time, b.runtime);
+      });
+      
+      const filtered = currentTab === 'nowplaying' 
+        ? sorted.filter(st => !cleaned[st.movieId + '|' + st.time])
+        : sorted.filter(st => cleaned[st.movieId + '|' + st.time]);
+      
+      if (filtered.length === 0) {
+        list.innerHTML = '<div style="text-align:center;padding:40px;color:#889aa1;font-size:1.1rem;">No showtimes</div>';
+      } else {
+        list.innerHTML = filtered.map(st => {
+          const key = st.movieId + '|' + st.time;
+          const isCleaned = cleaned[key] === true;
+          const endTime = getEndTime(st.time, st.runtime);
+          
+          return '<div class="movie-card ' + (isCleaned ? 'cleaned' : '') + '">' +
+            '<input type="checkbox" class="checkbox" ' + (isCleaned ? 'checked' : '') + ' onchange="toggleCleaned(\'' + st.movieId + '\',\'' + st.time + '\')">' +
+            '<div class="movie-info">' +
+              '<div class="movie-title">' + st.movie + '</div>' +
+              '<div class="movie-meta">' +
+                '<span class="rating">' + st.rating + '</span>' +
+                '<span class="theater-type">' + st.theater + '</span>' +
+                '<span class="auditorium">Aud ' + st.auditorium + '</span>' +
+              '</div>' +
+              '<span class="showtime">' + endTime + '</span>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      }
+      
+      const nowPlaying = sorted.filter(st => !cleaned[st.movieId + '|' + st.time]).length;
+      const cleanedCount = sorted.filter(st => cleaned[st.movieId + '|' + st.time]).length;
+      document.getElementById('nowPlayingCount').textContent = nowPlaying;
+      document.getElementById('cleanedCount').textContent = cleanedCount;
+    }
+  </script>
+</body>
+</html>
