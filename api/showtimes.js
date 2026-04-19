@@ -17,7 +17,7 @@ export default async function handler(req, res) {
       });
     }
     
-    const shows = [];
+    const shows = []; // debug v5
     const titleRatingMap = {};
     
     const parts = html.split('<div class="cin-movie-card');
