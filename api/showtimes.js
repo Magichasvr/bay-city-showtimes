@@ -26,21 +26,40 @@ function calcEndTime(startTime, runtimeStr) {
     const mins = parseInt(timeMatch[2]);
     const period = timeMatch[3].toLowerCase();
     
-    if (period === 'pm' && hours !== 12) hours += 12;
+    // Convert to 24-hour
+    if (period === 'pm' && hours < 12) hours += 12;
     if (period === 'am' && hours === 12) hours = 0;
     
     const startMins = hours * 60 + mins;
     const totalMins = startMins + runtimeMins;
     
+    // Get end time in 24-hour, keep over 24 for display
     const endHours = Math.floor(totalMins / 60);
     const endMins = totalMins % 60;
-    const endPeriod = endHours >= 12 ? 'pm' : 'am';
-    const displayHours = endHours === 0 ? 12 : (endHours > 12 ? endHours - 12 : endHours);
+    
+    // Determine period - if over 24 hours, it's next day (pm)
+    let displayHours = endHours;
+    let endPeriod = 'pm'; // Default to pm for times after noon
+    
+    if (endHours < 12) {
+      endPeriod = 'am';
+      displayHours = endHours === 0 ? 12 : endHours;
+    } else if (endHours < 24) {
+      endPeriod = 'pm';
+      displayHours = endHours - 12;
+      if (displayHours === 0) displayHours = 12;
+    } else {
+      // Next day - subtract 24 for display but show am/pm correctly
+      displayHours = endHours - 24;
+      endPeriod = displayHours < 12 ? 'am' : 'pm';
+      if (displayHours === 0) displayHours = 12;
+    }
     
     return displayHours + ':' + endMins.toString().padStart(2, '0') + endPeriod;
   } catch (e) {
     return '';
   }
+}
 }
 
 module.exports = async function handler(req, res) {
