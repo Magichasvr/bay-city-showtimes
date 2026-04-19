@@ -41,5 +41,5 @@ module.exports = async function handler(req, res) {
     });
   }
   
-  res.json({ shows: shows.slice(0, 5), count: shows.length });
+  res.json({ shows, count: shows.length, sample: parts[1] ? parts[1].substring(0, 300) : 'none' });
 }
