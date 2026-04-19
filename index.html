@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bay City Cleaner</title>
+  <title>Bay City Cleaner - Live</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -217,16 +217,19 @@
     
     async function loadShowtimes() {
       try {
+        console.log('Fetching from:', API_URL);
         const response = await fetch(API_URL, { cache: 'no-store' });
+        console.log('Response status:', response.status);
         if (response.ok) {
           const data = await response.json();
+          console.log('Got shows:', data.shows ? data.shows.length : 0);
           todaysShowtimes = data.shows || [];
           dataSource = 'api';
         } else {
           throw new Error('API unavailable');
         }
       } catch (e) {
-        console.log('Using fallback data');
+        console.log('Error:', e.message);
         todaysShowtimes = [];
         dataSource = 'fallback';
       }
