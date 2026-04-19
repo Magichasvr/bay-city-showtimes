@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/api/showtimes", "destination": "/api.js" }
+    { "source": "/api/showtimes", "destination": "/api/functions/showtimes.js" }
   ]
 }
